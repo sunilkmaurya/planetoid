@@ -4,7 +4,7 @@ from trans_model import trans_model as model
 import argparse
 import cPickle
 
-DATASET = 'citeseer'
+DATASET = 'pubmed'
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--learning_rate', help = 'learning rate for supervised loss', type = float, default = 0.1)
@@ -27,6 +27,7 @@ def comp_accu(tpy, ty):
     return (np.argmax(tpy, axis = 1) == np.argmax(ty, axis = 1)).sum() * 1.0 / tpy.shape[0]
 
 # load the data: x, y, tx, ty, graph
+print("Dataset is "+DATASET)
 NAMES = ['x', 'y', 'tx', 'ty', 'graph']
 OBJECTS = []
 for i in range(len(NAMES)):
@@ -47,3 +48,6 @@ while True:
     if accu > max_accu:
         m.store_params()                                                        # store the model if better result is obtained
         max_accu = max(max_accu, accu)
+	with open(DATASET+"_result.pickle",'wb') as f:
+		cPickle.dump([tx,ty,tpy],f)
+	f.close()
